@@ -173,15 +173,13 @@ function testing_civicrm_coreResourceList(&$list, $region) {
  */
 function testing_civicrm_emailProcessor($type, &$params, $mail, &$result, $action = null)
 {
-  // Set inbound email activity to "New"
-  $params['status_id'] = 9;
-
   foreach ($mail->to as $mAddress) {
     switch ($mAddress->email) {
       case 'webservices@british-caving.org.uk':
       case 'support@webservices.british-caving.org.uk':
       case 'test@webservices.british-caving.org.uk':
         // Set assigned to noone, with contact to sender
+        // Set inbound email activity to "New"
         $result = civicrm_api3('Activity', 'create', array(
           'sequential' => 1,
           'id' => $result['id'],
