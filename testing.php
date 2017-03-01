@@ -159,3 +159,37 @@ function testing_civicrm_navigationMenu(&$menu) {
 function testing_civicrm_coreResourceList(&$list, $region) {
   Civi::resources()->addScriptFile('uk.co.mjwconsult.testing', 'js/navigation_search_default.js');
 }
+
+/**
+ * Implements hook_civicrm_emailProcessor
+ * 
+  * @param string $type type of mail processed: 'activity' OR 'mailing'
+  * @param array &$params the params that were sent to the CiviCRM API function
+  * @param object $mail the mail object which is an ezcMail class
+  * @param array &$result the result returned by the api call
+  * @param string $action (optional ) the requested action to be performed if the types was 'mailing'
+  *
+  * @return null
+ */
+function testing_civicrm_emailProcessor($type, &$params, $mail, &$result, $action = null)
+{
+  // Set inbound email activity to "New"
+  $params['status_id'] = 9;
+
+  foreach ($mail->to as $mAddress) {
+    switch ($mAddress->email) {
+      case 'webservices@british-caving.org.uk':
+      case 'support@webservices.british-caving.org.uk':
+      case 'test@webservices.british-caving.org.uk':
+        // Set assigned to noone, with contact to sender
+        $result = civicrm_api3('Activity', 'create', array(
+          'sequential' => 1,
+          'id' => $result['id'],
+          'status_id' => 9,
+          'assignee_id' => '',
+          'target_id' => $params['assignee_contact_id'],
+        ));
+        break;
+    }
+  }
+}
