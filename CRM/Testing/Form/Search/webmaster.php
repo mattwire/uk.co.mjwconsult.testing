@@ -185,7 +185,8 @@ WHERE m.contact_id IS NOT NULL
    * @param array $row modifiable SQL result row
    * @return void
    */
-  function alterRow(&$row) {
+/*  function alterRow(&$row) {
     $row['sort_name'] .= ' ( altered )';
   }
+*/
 }
